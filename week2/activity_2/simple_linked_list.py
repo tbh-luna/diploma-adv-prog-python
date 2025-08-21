@@ -5,24 +5,24 @@ class EmptyListException(Exception):
 
 class Node:
     def __init__(self, value, next_node=None):
-        self._value = value          # The actual value stored in the node
-        self._next = next_node       # Reference to the next node in the list
+        self._value = value  # The value stored in the node
+        self._next = next_node  # Reference to the next node in the list
 
     def value(self):
-        return self._value           # Returns the value stored in this node
+        return self._value # Returns the value stored in the node
 
     def next(self):
-        return self._next            # Returns the next node
+        return self._next # Returns the next node
 
     def set_next(self, node):
-        self._next = node            # Sets the next node reference
+        self._next = node # Sets the next node reference
 
 
-# Singly-linked list data structure
+# Singly-linked list
 class LinkedList:
     def __init__(self, values=None):
-        self._head = None            # Points to the first node in the list
-        self._length = 0             # Tracks the number of elements in the list
+        self._head = None  # Points to the first node in the list
+        self._length = 0 # Tracks the number of elements in the list
         if values:
             # Push each value so the final list order matches input
             for value in reversed(list(values)):
@@ -31,6 +31,7 @@ class LinkedList:
     def __iter__(self):
         # Allows iteration through the list using for-loops or list()
         current = self._head
+        # Generator to yield the value
         while current:
             yield current.value()
             current = current.next()
@@ -40,7 +41,7 @@ class LinkedList:
         return self._length
 
     def __getitem__(self, index):
-        # Enables bracket access like linked_list[0]
+        # Enables bracket access e.g. linked_list[0]
         if not 0 <= index < self._length:
             raise IndexError("Index out of bounds.")
         current = self._head
@@ -49,7 +50,7 @@ class LinkedList:
         return current.value()
 
     def head(self):
-        # Returns the head node; raises if list is empty
+        # Returns the head node
         if self._head is None:
             raise EmptyListException("The list is empty.")
         return self._head
@@ -97,7 +98,7 @@ class LinkedList:
         self._length -= 1
 
     def reversed(self):
-        # Returns a new LinkedList with the same elements in reverse order
+        # Returns a new LinkedList with the node elements in reverse order
         new_list = LinkedList()
         current = self._head
         while current:
@@ -106,11 +107,12 @@ class LinkedList:
         return new_list
 
 if __name__ == "__main__":
-    ll = LinkedList([1, 2, 3])
-    ll.push(0)
-    ll.insert(2, 99)
-    print("List:", list(ll))              # [0, 1, 99, 2, 3]
-    print("Item at index 3:", ll[3])      # 2
-    ll.delete(2)
-    print("After delete:", list(ll))      # [0, 1, 2, 3]
-    print("Reversed:", list(ll.reversed()))  # [3, 2, 1, 0]
+    # Examples
+    single_list = LinkedList([1, 2, 3])
+    single_list.push(0)
+    single_list.insert(2, 99)
+    print("List:", list(single_list))              # [0, 1, 99, 2, 3]
+    print("Item at index 3:", single_list[3])      # 2
+    single_list.delete(2)
+    print("After delete:", list(single_list))      # [0, 1, 2, 3]
+    print("Reversed:", list(single_list.reversed()))  # [3, 2, 1, 0]

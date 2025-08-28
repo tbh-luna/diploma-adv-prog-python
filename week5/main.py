@@ -3,17 +3,13 @@ from src.helpers import make_unique_random_list, time_call, make_random_graph
 from src.binary_search import *
 from src.linear_search import *
 from src.breadth_first_search import *
+from src.depth_first_search import *
 
-def run_experiment_1(seed=42, n=10_000, trials=10000, low=1, high=12_000):
+def run_experiment_1(seed=42, n=10000, trials=10000, low=1, high=10000):
     """
     Timing experiment to compares different search strategies.
-
     The function generates a dataset of unique random integers, then times
     how long it takes to locate randomly chosen "needle" values using:
-      - Linear search on an unsorted list
-      - Linear search on a sorted list
-      - Binary search on an unsorted list
-      - Binary search on a sorted list
 
     Args:
         seed (int): Random seed for reproducibility.
@@ -39,29 +35,30 @@ def run_experiment_1(seed=42, n=10_000, trials=10000, low=1, high=12_000):
     # sort it
     data_sorted = sorted(data_unsorted)
 
-    # Linear search on UNSORTED
     avg_time_linear_unsorted = sum(
         time_call(lambda: linear_search(x, data_unsorted)) for x in needles
     ) / trials
 
-    # Linear search on SORTED
     avg_time_linear_sorted = sum(
         time_call(lambda: linear_search(x, data_sorted)) for x in needles
     ) / trials
 
-    # Binary search on UNSORTED
+    avg_time_binary_unsorted = sum(
+        time_call(lambda: binary_search_iter(x, data_unsorted)) for x in needles
+    ) / trials
 
-
-    # Binary search on SORTED
+    avg_time_binary_sorted = sum(
+        time_call(lambda: binary_search_iter(x, data_sorted)) for x in needles
+    ) / trials
  
 
     print(f"Linear Search(unsorted) ms: {avg_time_linear_unsorted}")
     print(f"Linear Search(sorted)   ms: {avg_time_linear_sorted}")
-    # print(f"Binary Search(unsorted) ms: {avg_time_binary_unsorted}")
-    # print(f"Binary Search(sorted)   ms: {avg_time_binary_sorted}")
+    print(f"Binary Search(unsorted) ms: {avg_time_binary_unsorted}")
+    print(f"Binary Search(sorted)   ms: {avg_time_binary_sorted}")
 
 
-def run_experiment_2(n_nodes: int = 10_000, avg_neighbours: int = 6,trials: int = 10000, seed: int = 123):
+def run_experiment_2(n_nodes: int = 10000, avg_neighbours: int = 7,trials: int = 10000, seed: int = 123):
     """
     Time BFS vs DFS (iterative) over many random start/goal pairs on a graph.
 
@@ -77,20 +74,34 @@ def run_experiment_2(n_nodes: int = 10_000, avg_neighbours: int = 6,trials: int 
             'DFS (avg ms)': float
         }
     """
-    rng = random.Random(seed)
+    value_range = random.Random(seed)
     graph = make_random_graph(n=n_nodes, avg_degree=avg_neighbours, seed=seed)
 
     # random start/goal pairs
+    nodes = list(range(n_nodes))
+    pairs = [(value_range.choice(nodes), value_range.choice(nodes)) for _ in range(trials)]
   
 
     # create a starting time for each algotihm
+    bfs_time_total = 0.0
+    dfs_time_total = 0.0
 
+    for start, goal in pairs:
+        bfs_time_total += time_call(lambda: bfs_search(graph, start, goal))
+        dfs_time_total += time_call(lambda: dfs_search(graph, start, goal))
+
+    results = {
+        "Breadth First Search ms": bfs_time_total / trials,
+        "Depth First Search ms": dfs_time_total / trials,
+    }
+
+    return results
 
 if __name__ == "__main__":
     run_experiment_1()
 
     graph_results = run_experiment_2()
 
-    print("\nAverage time (ms) over 10000 Graph searches (BFS vs DFS)")
+    print("\nAverage time (ms) - BFS vs DFS")
     for k, v in graph_results.items():
         print(f"{k}: {v:.6f}")

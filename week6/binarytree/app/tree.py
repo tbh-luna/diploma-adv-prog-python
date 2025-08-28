@@ -1,9 +1,12 @@
-from node import Node
+from binarytree.app.node import Node
 
 
 class Tree:
     def __init__(self):
         self.__root = None
+
+    def get_root(self):
+        return self.__root
 
     def find(self, key):
         current = self.__root

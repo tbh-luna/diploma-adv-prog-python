@@ -1,5 +1,5 @@
 import pickle 
-from ..binarytree.app.tree import Tree
+from binarytree.app.tree import Tree
 
 class GuessTheAnimal:
     """
@@ -21,6 +21,8 @@ class GuessTheAnimal:
         self.__animalTree = Tree
         self.__dataChange = False
         self.__has_played_round = False
+        self.__root = self.__animalTree.get_root
+        self.play()
         # Initialise binary tree with an "empty" node
         # Boolean to determine whether the data has changed (for game save purposes)
         # Boolean to determine whether a round was played (for "play again" purposes)
@@ -98,6 +100,8 @@ class GuessTheAnimal:
         """
         try:
             with open(self.SAVE_GAME_FILENAME, 'rb') as saved_game:
+
+                print(pickle.Unpickler(saved_game).load())
                 # Game and tree reloading
                 # Consider what private variable instance shoudl be updated
                 pass
@@ -162,19 +166,24 @@ class GuessTheAnimal:
 
         while True:
             choice = self.__menu()
+            
             # A new unsaved game
             if choice == 'N':
                 self.init()
                 self.play_round()
+
             # Play the game
             elif choice == 'P':
                 self.play_round()
+
             # Load the binary file with our tree
             elif choice == 'L':
                 self.load()
+
             # Save the existing binary tree
             elif choice == 'S':
                 self.save()
+                
             # Quit the game
             elif choice == 'Q':
                 break
@@ -182,3 +191,4 @@ class GuessTheAnimal:
         print("+-----------------------------------------+")
         print('|           Thanks for playing.           |')
         print("+-----------------------------------------+")
+

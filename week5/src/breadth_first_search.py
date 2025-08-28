@@ -7,10 +7,17 @@ from collections import deque
 
 def bfs_iterative_search(graph, start_node, goal_node):
     """Return True iff goal_node is reachable from start_node using BFS."""
+
+    # If start node is the goal node itself
     if start_node == goal_node:
         return True
+
+    # creates a set of nodes visited (only start node for now)
     visited_nodes = set([start_node])
+
+    # creates a deque (Double ended queue) consisting of only the start node
     queue = deque([start_node])
+
     while queue:
         current_node = queue.popleft()
         for neighbor in graph.get(current_node, []):

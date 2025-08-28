@@ -1,4 +1,5 @@
-import pickle
+import pickle 
+from ..binarytree.app.tree import Tree
 
 class GuessTheAnimal:
     """
@@ -16,6 +17,10 @@ class GuessTheAnimal:
     SAVE_GAME_FILENAME = 'guess_the_animal_save_game.bin'
 
     def __init__(self):
+
+        self.__animalTree = Tree
+        self.__dataChange = False
+        self.__has_played_round = False
         # Initialise binary tree with an "empty" node
         # Boolean to determine whether the data has changed (for game save purposes)
         # Boolean to determine whether a round was played (for "play again" purposes)
